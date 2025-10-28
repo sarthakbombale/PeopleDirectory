@@ -259,13 +259,13 @@ function People() {
           {/* Table */}
           {/* Wrap the table in a horizontally-scrollable container so the scrollbar appears under the table only
               (prevents the scrollbar from appearing below the pagination). */}
-          <div style={{ overflowX: "auto" }}>
+          <div className="table-scroll-wrapper" style={{ overflowX: "auto" }}>
             <table
               width="100%"
               cellPadding="10"
               style={{
                 borderCollapse: "collapse",
-                minWidth: "1000px", // 👈 Wider table
+                tableLayout: "fixed", // make columns respect available space
                 color: theme.colors.text,
               }}
             >

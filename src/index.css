@@ -3,3 +3,23 @@
   padding: 0;
   box-sizing: border-box;
 }
+
+/* Make tables responsive: allow cells to wrap instead of forcing horizontal scroll */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed; /* let columns share available width */
+}
+
+th, td {
+  padding: 8px 10px;
+  text-align: left;
+  white-space: normal; /* allow wrapping */
+  overflow-wrap: anywhere; /* break long words/URLs */
+  word-break: break-word;
+}
+
+/* Make pagination and controls immune to the table's horizontal scrollbar */
+.table-scroll-wrapper {
+  overflow-x: auto;
+}
