@@ -60,16 +60,39 @@ function TeamMember({ member, onDelete, onEdit, onSelect }) {
               const extra = member.teams.length - visible.length;
               return (
                 <>
-                  {visible.map((team, index) => (
-                    <span
-                      key={index}
-                      className="team-badge"
-                      data-team={team}
-                      title={team}
-                    >
-                      {team}
-                    </span>
-                  ))}
+                    {visible.map((team, index) => {
+                      const borderColor = teamColors[team] || (theme.isDarkMode ? '#ffffff' : '#000000');
+                      // Inline capsule style as a robust fallback to ensure capsule look
+                      const inlineBadge = {
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        padding: '6px 10px',
+                        marginRight: 8,
+                        marginBottom: 8,
+                        borderRadius: 999,
+                        border: `1px solid ${borderColor}`,
+                        background: theme.isDarkMode ? 'rgba(255,255,255,0.04)' : 'transparent',
+                        color: theme.isDarkMode ? '#fff' : '#111827',
+                        fontSize: '0.78rem',
+                        fontWeight: 500,
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        maxWidth: '160px',
+                      };
+
+                      return (
+                        <span
+                          key={index}
+                          className="team-badge"
+                          data-team={team}
+                          title={team}
+                          style={inlineBadge}
+                        >
+                          {team}
+                        </span>
+                      );
+                    })}
                   {extra > 0 && (
                     <span
                       className="team-badge"
