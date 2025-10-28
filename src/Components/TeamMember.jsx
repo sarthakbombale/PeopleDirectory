@@ -45,7 +45,9 @@ function TeamMember({ member, onDelete, onEdit, onSelect }) {
         </span>
       </td>
 
-      <td>{member.role}</td>
+      <td>
+        <span className="role-text" title={member.role}>{member.role}</span>
+      </td>
       <td>
         <span className="email-text" title={member.email}>{member.email}</span>
       </td>
@@ -61,28 +63,15 @@ function TeamMember({ member, onDelete, onEdit, onSelect }) {
                 {visible.map((team, index) => (
                   <span
                     key={index}
-                    style={{
-                      backgroundColor: theme.isDarkMode ? "#2b2b2b" : "#f0f0f0",
-                      borderRadius: "20px",
-                      padding: "3px 8px",
-                      marginRight: "5px",
-                      fontSize: "0.8rem",
-                      color: theme.colors.text,
-                    }}
+                    className={`team-badge ${index % 2 === 1 ? 'alt' : ''}`}
+                    title={team}
                   >
                     {team}
                   </span>
                 ))}
                 {extra > 0 && (
                   <span
-                    style={{
-                      backgroundColor: theme.isDarkMode ? "#2b2b2b" : "#f0f0f0",
-                      borderRadius: "20px",
-                      padding: "3px 8px",
-                      marginRight: "5px",
-                      fontSize: "0.8rem",
-                      color: theme.colors.text,
-                    }}
+                    className="team-badge team-more"
                     title={member.teams.slice(2).join(', ')}
                   >
                     +{extra}

@@ -69,3 +69,41 @@ th, td {
   margin-right: 5px;
   font-size: 0.8rem;
 }
+
+/* Role text: very small, single-line, red color (won't push into another row) */
+.role-text {
+  font-size: 0.7rem;
+  color: #d9534f; /* red */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
+  max-width: 100%;
+}
+
+/* Team badge base styles */
+.team-badge {
+  display: inline-block;
+  background-color: #f0f0f0;
+  color: #222;
+  border-radius: 16px;
+  padding: 2px 6px;
+  margin-right: 6px;
+  font-size: 0.7rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+/* Alternate color for variety */
+.team-badge.alt {
+  background-color: #e8f0ff;
+  color: #1a56db;
+}
+
+/* Ensure the +N indicator is visually consistent */
+.team-badge.team-more {
+  background-color: #f7f7f7;
+  color: #666;
+}
