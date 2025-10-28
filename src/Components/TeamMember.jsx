@@ -23,8 +23,8 @@ function TeamMember({ member, onDelete, onEdit, onSelect }) {
             }}
           />
           <div>
-            <strong>{member.name}</strong>
-            <div style={{ color: theme.colors.secondaryText, fontSize: "0.9rem" }}>
+            <strong className="member-name-text">{member.name}</strong>
+            <div className="member-name-text" style={{ color: theme.colors.secondaryText, fontSize: "0.9rem" }}>
               @{member.username}
             </div>
           </div>

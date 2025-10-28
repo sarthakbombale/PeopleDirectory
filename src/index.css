@@ -23,3 +23,27 @@ th, td {
 .table-scroll-wrapper {
   overflow-x: auto;
 }
+
+/* Prevent cells from wrapping into multiple lines and truncate with ellipsis */
+.table-scroll-wrapper table th,
+.table-scroll-wrapper table td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+}
+
+/* Allow the name text inside a flex container to shrink (prevents overflowing next column) */
+.member-name-text {
+  display: block;
+  min-width: 0; /* important for flex children to allow shrinking */
+}
+
+/* Make team chips not wrap the row but show truncated content if too long */
+.table-scroll-wrapper table td span {
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
