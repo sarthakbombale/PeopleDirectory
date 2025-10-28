@@ -47,3 +47,25 @@ th, td {
   text-overflow: ellipsis;
   max-width: 100%;
 }
+
+/* Smaller, readable email text with truncation */
+.email-text {
+  font-size: 0.85rem;
+  color: inherit;
+  opacity: 0.9;
+  display: inline-block;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Style for +N team indicator */
+.team-more {
+  display: inline-block;
+  background: #f0f0f0;
+  border-radius: 20px;
+  padding: 3px 8px;
+  margin-right: 5px;
+  font-size: 0.8rem;
+}
