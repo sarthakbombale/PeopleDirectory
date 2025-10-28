@@ -10,7 +10,7 @@ function TeamMember({ member, onDelete, onEdit, onSelect }) {
       style={{ cursor: "pointer" }}
       onClick={() => onSelect(member)}
     >
-      <td>
+      <td data-label="Name">
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
           <img
             src={member.avatar}
@@ -31,7 +31,7 @@ function TeamMember({ member, onDelete, onEdit, onSelect }) {
         </div>
       </td>
 
-      <td>
+  <td data-label="Status">
         <span
           style={{
             backgroundColor: theme.isDarkMode ? "rgba(25,135,84,0.12)" : "#e9f7ef",
@@ -45,14 +45,14 @@ function TeamMember({ member, onDelete, onEdit, onSelect }) {
         </span>
       </td>
 
-      <td>
+      <td data-label="Role">
         <span className="role-text" title={member.role}>{member.role}</span>
       </td>
-      <td>
+      <td data-label="Email">
         <span className="email-text" title={member.email}>{member.email}</span>
       </td>
 
-      <td data-teams>
+      <td data-teams data-label="Teams">
         <div className="team-badges-container">
           {member.teams && member.teams.length > 0 ? (
             (() => {
@@ -85,7 +85,7 @@ function TeamMember({ member, onDelete, onEdit, onSelect }) {
         </div>
       </td>
 
-      <td onClick={(e) => e.stopPropagation()}>
+  <td data-label="Actions" onClick={(e) => e.stopPropagation()}>
         <button
           onClick={() => onDelete(member.id)}
           style={{
