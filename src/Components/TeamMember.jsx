@@ -4,6 +4,11 @@ import { useTheme } from "../context/ThemeContext";
 
 function TeamMember({ member, onDelete, onEdit, onSelect }) {
   const theme = useTheme();
+  const teamColors = {
+    Design: '#FF5733',
+    Product: '#33A852',
+    Marketing: '#3357FF',
+  };
 
   return (
     <tr
@@ -60,7 +65,7 @@ function TeamMember({ member, onDelete, onEdit, onSelect }) {
               const extra = member.teams.length - visible.length;
               return (
                 <>
-                    {visible.map((team, index) => {
+            {visible.map((team, index) => {
                       const borderColor = teamColors[team] || (theme.isDarkMode ? '#ffffff' : '#000000');
                       // Inline capsule style as a robust fallback to ensure capsule look
                       const inlineBadge = {
@@ -95,8 +100,22 @@ function TeamMember({ member, onDelete, onEdit, onSelect }) {
                     })}
                   {extra > 0 && (
                     <span
-                      className="team-badge"
+                      className="team-badge team-more"
                       title={member.teams.slice(2).join(', ')}
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        padding: '6px 10px',
+                        marginRight: 8,
+                        marginBottom: 8,
+                        borderRadius: 999,
+                        border: `1px dashed ${theme.isDarkMode ? '#ffffff' : '#9ca3af'}`,
+                        background: theme.isDarkMode ? 'rgba(255,255,255,0.04)' : '#f3f4f6',
+                        color: theme.isDarkMode ? '#fff' : '#374151',
+                        fontSize: '0.72rem',
+                        fontWeight: 500,
+                        whiteSpace: 'nowrap',
+                      }}
                     >
                       +{extra}
                     </span>
