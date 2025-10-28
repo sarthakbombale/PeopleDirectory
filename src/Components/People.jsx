@@ -128,6 +128,7 @@ function People() {
         <div
           style={{
             flex: 2.8,
+            minWidth: 0, // allow this flex child to shrink when detail panel opens
             background: theme.colors.surface,
             borderRadius: "10px",
             padding: "20px",
@@ -259,7 +260,7 @@ function People() {
           {/* Table */}
           {/* Wrap the table in a horizontally-scrollable container so the scrollbar appears under the table only
               (prevents the scrollbar from appearing below the pagination). */}
-          <div className="table-scroll-wrapper" style={{ overflowX: "auto" }}>
+          <div className="table-scroll-wrapper" style={{ overflowX: "auto", minWidth: 0 }}>
             <table
               width="100%"
               cellPadding="10"

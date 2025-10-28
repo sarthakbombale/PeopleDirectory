@@ -87,9 +87,9 @@ th, td {
   background-color: #f0f0f0;
   color: #222;
   border-radius: 16px;
-  padding: 2px 6px;
+  padding: 1px 5px;
   margin-right: 6px;
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -106,4 +106,10 @@ th, td {
 .team-badge.team-more {
   background-color: #f7f7f7;
   color: #666;
+}
+
+/* Ensure table cells can shrink inside the flex container and not overlap */
+.table-scroll-wrapper table td,
+.table-scroll-wrapper table th {
+  min-width: 0; /* allow cells to shrink */
 }
