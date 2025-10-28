@@ -97,29 +97,34 @@ th, td {
 
 /* Team badge base styles */
 .team-badge {
-  display: inline-block;
-  background-color: #f0f0f0;
-  color: #222;
-  border-radius: 16px;
-  padding: 1px 5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #f3f4f6; /* neutral light */
+  color: #111827;
+  border-radius: 999px; /* capsule */
+  padding: 2px 8px;
   margin-right: 6px;
-  font-size: 0.65rem;
+  font-size: 0.62rem; /* very small but readable */
+  line-height: 1;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 90px;
+  max-width: 92px; /* keep badges compact */
+  height: 22px;
+  box-sizing: border-box;
 }
 
 /* Alternate color for variety */
 .team-badge.alt {
-  background-color: #e8f0ff;
-  color: #1a56db;
+  background-color: #eef2ff;
+  color: #1f3bb3;
 }
 
 /* Ensure the +N indicator is visually consistent */
 .team-badge.team-more {
   background-color: #f7f7f7;
-  color: #666;
+  color: #4b5563;
 }
 
 /* Ensure table cells can shrink inside the flex container and not overlap */
