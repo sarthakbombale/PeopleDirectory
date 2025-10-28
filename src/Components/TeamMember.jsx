@@ -22,9 +22,9 @@ function TeamMember({ member, onDelete, onEdit, onSelect }) {
               objectFit: "cover",
             }}
           />
-          <div>
+          <div className="name-container" style={{ minWidth: 0, overflow: 'hidden' }}>
             <strong className="member-name-text">{member.name}</strong>
-            <div className="member-name-text" style={{ color: theme.colors.secondaryText, fontSize: "0.9rem" }}>
+            <div className="member-username" style={{ color: theme.colors.secondaryText, fontSize: "0.9rem" }}>
               @{member.username}
             </div>
           </div>

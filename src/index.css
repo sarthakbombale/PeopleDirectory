@@ -35,9 +35,23 @@ th, td {
 
 /* Allow the name text inside a flex container to shrink (prevents overflowing next column) */
 .member-name-text {
-  display: block;
+  display: inline-block;
   min-width: 0; /* important for flex children to allow shrinking */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
+
+.member-username {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: inherit;
+}
+
+.name-container { min-width: 0; }
 
 /* Make team chips not wrap the row but show truncated content if too long */
 .table-scroll-wrapper table td span {
@@ -93,7 +107,7 @@ th, td {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 100%;
+  max-width: 90px;
 }
 
 /* Alternate color for variety */
