@@ -156,6 +156,27 @@ th, td {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  padding-left: 16px;
+  position: relative;
+}
+
+/* Add visual separator between teams and email */
+td[data-teams] {
+  padding-right: 24px !important;
+  position: relative;
+}
+
+/* Add a subtle separator between teams and email columns */
+td[data-teams]::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 70%;
+  width: 1px;
+  background: rgba(0, 0, 0, 0.1);
+  margin-right: 12px;
 }
 
 /* Style for +N team indicator */
@@ -238,9 +259,10 @@ th, td {
 .team-badges-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px;
+  gap: 6px;
   align-items: center;
-  max-width: 100%;
+  max-width: calc(100% - 12px);
+  padding-right: 8px;
 }
 
 /* Responsive styles for team badges */
