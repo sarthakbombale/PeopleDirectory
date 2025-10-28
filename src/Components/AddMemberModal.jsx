@@ -15,18 +15,20 @@ function AddMemberModal({ onClose, onSave }) {
     contact: '',
     workEmail: '',
   });
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     // Create new member object
     const newMember = {
       id: Date.now(), // Generate a unique ID
       ...formData,
       teams: formData.teams.split(',').map(t => t.trim()), // Convert comma-separated teams to array
       status: 'active', // Default status
-      // Generate a random avatar using initials
-      avatar: `https://api.dicebear.com/6.x/initials/svg?seed=${encodeURIComponent(formData.name)}`,
+      // Use uploaded image if available, otherwise generate avatar
+      avatar: imageFile ? URL.createObjectURL(imageFile) : `https://api.dicebear.com/6.x/initials/svg?seed=${encodeURIComponent(formData.name)}`,
       // Generate a username from name
       username: formData.name.toLowerCase().replace(/\s+/g, '') + Math.floor(Math.random() * 1000),
     };
@@ -46,6 +48,16 @@ function AddMemberModal({ onClose, onSave }) {
       ...prev,
       [name]: value
     }));
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImageFile(file);
+      // Create a preview URL for the image
+      const previewUrl = URL.createObjectURL(file);
+      setImagePreview(previewUrl);
+    }
   };
 
   return (
@@ -90,6 +102,43 @@ function AddMemberModal({ onClose, onSave }) {
         <h2 style={{ marginBottom: '20px', color: theme.colors.primary }}>Add New Member</h2>
 
         <form onSubmit={handleSubmit}>
+          <div style={{ marginBottom: '15px' }}>
+            <label style={{ display: 'block', marginBottom: '5px' }}>Profile Image</label>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+              {imagePreview && (
+                <div style={{
+                  width: '60px',
+                  height: '60px',
+                  borderRadius: '50%',
+                  overflow: 'hidden',
+                  border: `1px solid ${theme.colors.border}`,
+                }}>
+                  <img
+                    src={imagePreview}
+                    alt="Preview"
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                    }}
+                  />
+                </div>
+              )}
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                style={{
+                  width: '100%',
+                  padding: '8px',
+                  borderRadius: '4px',
+                  border: `1px solid ${theme.colors.border}`,
+                  background: theme.colors.surface,
+                  color: theme.colors.text,
+                }}
+              />
+            </div>
+          </div>
           <div style={{ marginBottom: '15px' }}>
             <label style={{ display: 'block', marginBottom: '5px' }}>Name *</label>
             <input
@@ -148,7 +197,18 @@ function AddMemberModal({ onClose, onSave }) {
           </div>
 
           <div style={{ marginBottom: '15px' }}>
-            <label style={{ display: 'block', marginBottom: '5px' }}>Teams (comma-separated) *</label>
+            <label
+              style={{
+                display: 'block',
+                marginBottom: '5px',
+                fontSize: '12px',
+                fontWeight: '500',
+                color: theme.colors.textSecondary || theme.colors.text,
+                letterSpacing: '0.3px',
+              }}
+            >
+              Teams (comma-separated) *
+            </label>
             <input
               type="text"
               name="teams"
@@ -158,14 +218,25 @@ function AddMemberModal({ onClose, onSave }) {
               placeholder="e.g., Design, Frontend, Backend"
               style={{
                 width: '100%',
-                padding: '8px',
-                borderRadius: '4px',
+                padding: '6px 12px',
+                borderRadius: '9999px', // capsule shape
                 border: `1px solid ${theme.colors.border}`,
                 background: theme.colors.surface,
                 color: theme.colors.text,
+                fontSize: '12px', // smaller, clean font
+                outline: 'none',
+                transition: 'all 0.2s ease',
+                boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
               }}
+              onFocus={(e) =>
+                (e.target.style.border = `1px solid ${theme.colors.primary || '#7C3AED'}`)
+              }
+              onBlur={(e) =>
+                (e.target.style.border = `1px solid ${theme.colors.border}`)
+              }
             />
           </div>
+
 
           <div style={{ marginBottom: '15px' }}>
             <label style={{ display: 'block', marginBottom: '5px' }}>Date of Birth</label>

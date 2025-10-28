@@ -33,7 +33,7 @@ function People() {
 
   const membersPerPage = 10;
 
-  // <FaCheckCircle /> Filter Logic
+  // Filter Logic
   const filteredMembers = members.filter((m) => {
     const matchName =
       m.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -52,7 +52,6 @@ function People() {
     const member = members.find((m) => m.id === id);
     if (!member) return;
 
-    // Show a persistent toast with Confirm / Cancel buttons instead of window.confirm
     const toastId = toast(
       ({ closeToast }) => (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -68,11 +67,9 @@ function People() {
             </button>
             <button
               onClick={() => {
-                // perform delete
                 setMembers((prev) => prev.filter((m) => m.id !== id));
                 if (selectedMember?.id === id) setSelectedMember(null);
                 toast.dismiss(toastId);
-                // show red toast for deletion
                 toast.error(`${member.name} deleted`, { autoClose: 3000 });
               }}
               style={{ padding: '6px 10px', borderRadius: 6, border: 'none', background: '#d9534f', color: '#fff' }}
@@ -94,18 +91,16 @@ function People() {
   const [showAddModal, setShowAddModal] = useState(false);
 
   const editMember = (id) => {
-    // open full edit modal for the selected member
     const member = members.find((m) => m.id === id);
     if (!member) return;
     setEditingMember(member);
   };
 
   const handleSaveMember = (updated) => {
-    // Replace the member matching by id and close modal
-    setMembers((prev) => prev.map((m) => (m.id === updated.id ? { ...m, ...updated } : m)));
-    // If the updated member is currently shown in the detail pane, update it too
+    setMembers((prev) =>
+      prev.map((m) => (m.id === updated.id ? { ...m, ...updated } : m))
+    );
     setSelectedMember((cur) => (cur?.id === updated.id ? { ...cur, ...updated } : cur));
-    // Close modal
     setEditingMember(null);
     toast.success(`${updated.name} updated`);
   };
@@ -122,13 +117,14 @@ function People() {
           color: theme.colors.text,
           minHeight: "100vh",
           transition: "all 0.25s ease",
+          flexWrap: "wrap", // allow wrapping for smaller screens
         }}
       >
-        {/* LEFT SIDE TABLE */}
+        {/* TABLE SIDE */}
         <div
           style={{
-            flex: 2.8,
-            minWidth: 0, // allow this flex child to shrink when detail panel opens
+            flex: 1,
+            minWidth: 0,
             background: theme.colors.surface,
             borderRadius: "10px",
             padding: "20px",
@@ -140,7 +136,7 @@ function People() {
             Team Members ({filteredMembers.length})
           </h2>
 
-          {/* <FaSearch /> Search + Filters */}
+          {/* Search + Filters */}
           <div
             style={{
               display: "flex",
@@ -166,7 +162,6 @@ function People() {
               }}
             />
 
-            {/* Role Filter */}
             <select
               value={selectedRole}
               onChange={(e) => setSelectedRole(e.target.value)}
@@ -186,7 +181,6 @@ function People() {
               ))}
             </select>
 
-            {/* Team Filter */}
             <select
               value={selectedTeam}
               onChange={(e) => setSelectedTeam(e.target.value)}
@@ -206,7 +200,6 @@ function People() {
               ))}
             </select>
 
-            {/* Clear Filters Button */}
             <button
               onClick={() => {
                 setSearchTerm("");
@@ -214,14 +207,17 @@ function People() {
                 setSelectedTeam("");
               }}
               style={{
-                background: "transparent", 
+                background: "transparent",
                 color: "red",
-                border: "2px solid red", 
+                border: "2px solid red",
                 padding: "8px 16px",
                 borderRadius: "6px",
                 cursor: "pointer",
                 fontWeight: "500",
-                display: searchTerm || selectedRole || selectedTeam ? "block" : "none",
+                display:
+                  searchTerm || selectedRole || selectedTeam
+                    ? "block"
+                    : "none",
                 transition: "all 0.2s ease",
               }}
               onMouseOver={(e) => {
@@ -236,8 +232,6 @@ function People() {
               Clear Filters
             </button>
 
-
-            {/* Add Member Button */}
             <button
               onClick={() => setShowAddModal(true)}
               style={{
@@ -258,58 +252,63 @@ function People() {
           </div>
 
           {/* Table */}
-          {/* Wrap the table in a horizontally-scrollable container so the scrollbar appears under the table only
-              (prevents the scrollbar from appearing below the pagination). */}
-          <div className="table-scroll-wrapper" style={{ overflowX: "auto", minWidth: 0 }}>
+          <div
+            className="table-scroll-wrapper"
+            style={{
+              overflowX: "auto",
+              minWidth: 0,
+              width: "100%",
+            }}
+          >
             <table
               width="100%"
               cellPadding="10"
               style={{
                 borderCollapse: "collapse",
-                tableLayout: "fixed", // make columns respect available space
+                tableLayout: "auto",
                 color: theme.colors.text,
               }}
             >
-              {/* Explicit column width allocations so Email, Teams and Actions get enough space */}
-               <colgroup>
-                <col style={{ width: '25%' }} /> {/* Name - enough for name+username */}
-                <col style={{ width: '8%' }} />  {/* Status - compact */}
-                <col style={{ width: '10%' }} /> {/* Role - small text */}
-                <col style={{ width: '22%' }} /> {/* Email - needs space for long addresses */}
-                <col style={{ width: '25%' }} /> {/* Teams - space for 2-3 small badges */}
-                <col style={{ width: '10%' }} /> {/* Actions - fixed width */}
+              <colgroup>
+                <col style={{ width: "auto" }} />
+                <col style={{ width: "auto" }} />
+                <col style={{ width: "auto" }} />
+                <col style={{ width: "auto" }} />
+                <col style={{ width: "auto" }} />
+                <col style={{ width: "auto" }} />
               </colgroup>
-            <thead>
-              {/* Removed bottom border on header row to avoid the thin horizontal line */}
-              <tr style={{ background: theme.colors.tableHeader }}>
-                <th align="left">Name</th>
-                <th>Status</th>
-                <th>Role</th>
-                <th>Email</th>
-                <th>Teams</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {currentMembers.length > 0 ? (
-                currentMembers.map((member) => (
-                  <TeamMember
-                    key={member.id}
-                    member={member}
-                    onDelete={deleteMember}
-                    onEdit={editMember}
-                    onSelect={setSelectedMember}
-                  />
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="6" style={{ textAlign: "center", padding: "20px" }}>
-                    No members found.
-                  </td>
+              <thead>
+                <tr style={{ background: theme.colors.tableHeader }}>
+                  <th align="left">Name</th>
+                  <th>Status</th>
+                  <th>Role</th>
+                  <th>Email</th>
+                  <th>Teams</th>
+                  <th>Actions</th>
                 </tr>
-              )}
-            </tbody>
+              </thead>
+              <tbody>
+                {currentMembers.length > 0 ? (
+                  currentMembers.map((member) => (
+                    <TeamMember
+                      key={member.id}
+                      member={member}
+                      onDelete={deleteMember}
+                      onEdit={editMember}
+                      onSelect={setSelectedMember}
+                    />
+                  ))
+                ) : (
+                  <tr>
+                    <td
+                      colSpan="6"
+                      style={{ textAlign: "center", padding: "20px" }}
+                    >
+                      No members found.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
             </table>
           </div>
 
@@ -320,6 +319,7 @@ function People() {
               justifyContent: "center",
               marginTop: "20px",
               gap: "10px",
+              flexWrap: "wrap",
             }}
           >
             <button
@@ -342,8 +342,14 @@ function People() {
                 key={i}
                 onClick={() => setCurrentPage(i + 1)}
                 style={{
-                  background: currentPage === i + 1 ? theme.colors.primary : theme.colors.buttonBg,
-                  color: currentPage === i + 1 ? "#fff" : theme.colors.buttonText,
+                  background:
+                    currentPage === i + 1
+                      ? theme.colors.primary
+                      : theme.colors.buttonBg,
+                  color:
+                    currentPage === i + 1
+                      ? "#fff"
+                      : theme.colors.buttonText,
                   borderRadius: "6px",
                   border: `1px solid ${theme.colors.buttonBorder}`,
                   padding: "6px 10px",
@@ -355,7 +361,9 @@ function People() {
             ))}
 
             <button
-              onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+              onClick={() =>
+                setCurrentPage((p) => Math.min(p + 1, totalPages))
+              }
               disabled={currentPage === totalPages}
               style={{
                 background: theme.colors.buttonBg,
@@ -363,7 +371,8 @@ function People() {
                 borderRadius: "6px",
                 border: `1px solid ${theme.colors.buttonBorder}`,
                 padding: "6px 10px",
-                cursor: currentPage === totalPages ? "not-allowed" : "pointer",
+                cursor:
+                  currentPage === totalPages ? "not-allowed" : "pointer",
               }}
             >
               Next
@@ -371,12 +380,13 @@ function People() {
           </div>
         </div>
 
-        {/* RIGHT SIDE DETAIL CARD */}
+        {/* Detail Panel (right side) */}
         {selectedMember && (
           <div
             style={{
-              flex: 1.5,
-              position: 'relative',
+              flex: 1,
+              minWidth: 0,
+              position: "relative",
               background: theme.colors.surface,
               borderRadius: "10px",
               boxShadow: theme.colors.cardShadow,
@@ -386,17 +396,16 @@ function People() {
               transition: "all 0.25s ease",
             }}
           >
-            {/* Close button to go back from member detail */}
             <button
               onClick={() => setSelectedMember(null)}
               aria-label="Close details"
               style={{
-                position: 'absolute',
+                position: "absolute",
                 top: 12,
                 right: 12,
-                border: 'none',
-                background: 'transparent',
-                cursor: 'pointer',
+                border: "none",
+                background: "transparent",
+                cursor: "pointer",
                 color: theme.colors.text,
                 fontSize: 18,
                 padding: 6,
@@ -404,7 +413,6 @@ function People() {
             >
               <FaTimes />
             </button>
-            {/* Header */}
             <div
               style={{
                 background: theme.colors.primary,
@@ -433,18 +441,33 @@ function People() {
               </div>
             </div>
 
-            {/* Info */}
             <div style={{ padding: "20px" }}>
-              {/* Removed bottom border from section headers for a cleaner look */}
               <h4 style={{ paddingBottom: "8px" }}>
                 Personal Information
               </h4>
-              <p><strong>Date of Birth:</strong> {selectedMember.dob || "29-04-2005"}</p>
-              <p><strong>Gender:</strong> {selectedMember.gender || "Female"}</p>
-              <p><strong>Nationality:</strong> {selectedMember.nationality || "Canadian"}</p>
-              <p><strong>Contact No.:</strong> {selectedMember.contact || "1234567890"}</p>
-              <p><strong>Email:</strong> {selectedMember.email}</p>
-              <p><strong>Work Email:</strong> {selectedMember.workEmail || selectedMember.email}</p>
+              <p>
+                <strong>Date of Birth:</strong>{" "}
+                {selectedMember.dob || "29-04-2005"}
+              </p>
+              <p>
+                <strong>Gender:</strong>{" "}
+                {selectedMember.gender || "Female"}
+              </p>
+              <p>
+                <strong>Nationality:</strong>{" "}
+                {selectedMember.nationality || "Canadian"}
+              </p>
+              <p>
+                <strong>Contact No.:</strong>{" "}
+                {selectedMember.contact || "1234567890"}
+              </p>
+              <p>
+                <strong>Email:</strong> {selectedMember.email}
+              </p>
+              <p>
+                <strong>Work Email:</strong>{" "}
+                {selectedMember.workEmail || selectedMember.email}
+              </p>
 
               <h4
                 style={{
@@ -455,12 +478,21 @@ function People() {
                 Research & Publication
               </h4>
               <p>
-                <strong>AI and User Experience: The Future of Design</strong><br />
+                <strong>
+                  AI and User Experience: The Future of Design
+                </strong>
+                <br />
                 Published in the Journal of Modern Design • 2022
               </p>
-              <p style={{ fontSize: "0.9rem", color: theme.colors.secondaryText }}>
-                AI and IoT-based real-time monitoring of electrical machines using Python.
-                Abstract: Maintaining induction motors in good working order before they fail...
+              <p
+                style={{
+                  fontSize: "0.9rem",
+                  color: theme.colors.secondaryText,
+                }}
+              >
+                AI and IoT-based real-time monitoring of electrical machines
+                using Python. Abstract: Maintaining induction motors in good
+                working order before they fail...
               </p>
               <a
                 href="#"
@@ -476,7 +508,8 @@ function People() {
           </div>
         )}
       </div>
-      {/* Edit modal — controlled by editingMember state */}
+
+      {/* Edit modal */}
       {editingMember && (
         <EditMemberModal
           member={editingMember}
@@ -490,12 +523,58 @@ function People() {
         <AddMemberModal
           onClose={() => setShowAddModal(false)}
           onSave={(newMember) => {
-            setMembers(prev => [...prev, newMember]);
+            setMembers((prev) => [...prev, newMember]);
             setShowAddModal(false);
             toast.success(`${newMember.name} added successfully!`);
           }}
         />
       )}
+
+      {/* Responsive table CSS */}
+      <style>
+        {`
+          /* Tablet adjustments */
+          @media (max-width: 900px) {
+            table {
+              font-size: 14px;
+            }
+            th, td {
+              padding: 8px;
+            }
+          }
+
+          /* Mobile: transform table to cards */
+          @media (max-width: 700px) {
+            table thead {
+              display: none;
+            }
+            table, table tbody, table tr, table td {
+              display: block;
+              width: 100%;
+            }
+            table tr {
+              margin-bottom: 15px;
+              border: 1px solid ${theme.colors.border};
+              border-radius: 8px;
+              padding: 10px;
+              background: ${theme.colors.surface};
+            }
+            table td {
+              text-align: left;
+              padding-left: 50%;
+              position: relative;
+            }
+            table td::before {
+              content: attr(data-label);
+              position: absolute;
+              left: 10px;
+              width: 45%;
+              white-space: nowrap;
+              font-weight: bold;
+            }
+          }
+        `}
+      </style>
     </>
   );
 }

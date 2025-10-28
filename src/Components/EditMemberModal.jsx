@@ -8,7 +8,10 @@ export default function EditMemberModal({ member, onClose, onSave }) {
     email: "",
     role: "",
     teams: "",
+    avatarUrl: "",
   });
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
 
   useEffect(() => {
     if (member) {
@@ -17,7 +20,9 @@ export default function EditMemberModal({ member, onClose, onSave }) {
         email: member.email || "",
         role: member.role || "",
         teams: (member.teams || []).join(", "),
+        avatarUrl: member.avatar || "",
       });
+      setImagePreview(member.avatar || "");
     }
   }, [member]);
 
@@ -26,6 +31,20 @@ export default function EditMemberModal({ member, onClose, onSave }) {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((s) => ({ ...s, [name]: value }));
+    if (name === 'avatarUrl' && value) {
+      setImagePreview(value);
+      setImageFile(null);
+    }
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImageFile(file);
+      const previewUrl = URL.createObjectURL(file);
+      setImagePreview(previewUrl);
+      setForm(s => ({ ...s, avatarUrl: '' })); // Clear URL input when file is selected
+    }
   };
 
   const handleSubmit = (e) => {
@@ -36,6 +55,7 @@ export default function EditMemberModal({ member, onClose, onSave }) {
       email: form.email,
       role: form.role,
       teams: form.teams.split(",").map((t) => t.trim()).filter(Boolean),
+      avatar: imageFile ? URL.createObjectURL(imageFile) : form.avatarUrl || member.avatar,
     };
     onSave(updated); // sends data to parent
   };
@@ -72,6 +92,61 @@ export default function EditMemberModal({ member, onClose, onSave }) {
         </p>
         <form onSubmit={handleSubmit}>
           <div style={{ display: "grid", gap: 8 }}>
+            <label style={{ fontSize: 12, color: theme.colors.secondaryText }}>Profile Image</label>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginBottom: '10px' }}>
+              {imagePreview && (
+                <div style={{
+                  width: '60px',
+                  height: '60px',
+                  borderRadius: '50%',
+                  overflow: 'hidden',
+                  border: `1px solid ${theme.colors.border}`,
+                }}>
+                  <img
+                    src={imagePreview}
+                    alt="Preview"
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                    }}
+                  />
+                </div>
+              )}
+              <div style={{ flex: 1 }}>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  style={{
+                    marginBottom: '8px',
+                    padding: 8,
+                    borderRadius: 6,
+                    border: `1px solid ${theme.colors.border}`,
+                    background: theme.colors.surface,
+                    color: theme.colors.text,
+                    width: '100%',
+                  }}
+                />
+                <input
+                  type="text"
+                  name="avatarUrl"
+                  placeholder="Or enter image URL"
+                  value={form.avatarUrl}
+                  onChange={handleChange}
+                  style={{
+                    padding: 8,
+                    borderRadius: 6,
+                    border: `1px solid ${theme.colors.border}`,
+                    background: theme.colors.surface,
+                    color: theme.colors.text,
+                    width: '100%',
+                  }}
+                />
+              </div>
+            </div>
+            <div style={{ fontSize: 12, color: theme.colors.secondaryText }}>Upload a new image or enter an image URL.</div>
+
             <label style={{ fontSize: 12, color: theme.colors.secondaryText }}>ID (read-only)</label>
             <input
               name="id"
