@@ -7,7 +7,7 @@ function TeamMember({ member, onDelete, onEdit, onSelect }) {
 
   return (
     <tr
-      style={{ borderBottom: `1px solid ${theme.colors.tableBorder}`, cursor: "pointer" }}
+      style={{ cursor: "pointer" }}
       onClick={() => onSelect(member)}
     >
       <td>

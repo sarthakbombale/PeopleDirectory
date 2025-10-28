@@ -270,7 +270,8 @@ function People() {
               }}
             >
             <thead>
-              <tr style={{ borderBottom: `2px solid ${theme.colors.tableBorder}`, background: theme.colors.tableHeader }}>
+              {/* Removed bottom border on header row to avoid the thin horizontal line */}
+              <tr style={{ background: theme.colors.tableHeader }}>
                 <th align="left">Name</th>
                 <th>Status</th>
                 <th>Role</th>
@@ -424,7 +425,8 @@ function People() {
 
             {/* Info */}
             <div style={{ padding: "20px" }}>
-              <h4 style={{ borderBottom: `2px solid ${theme.colors.border}`, paddingBottom: "8px" }}>
+              {/* Removed bottom border from section headers for a cleaner look */}
+              <h4 style={{ paddingBottom: "8px" }}>
                 Personal Information
               </h4>
               <p><strong>Date of Birth:</strong> {selectedMember.dob || "29-04-2005"}</p>
@@ -436,7 +438,6 @@ function People() {
 
               <h4
                 style={{
-                  borderBottom: `2px solid ${theme.colors.border}`,
                   paddingBottom: "8px",
                   marginTop: "20px",
                 }}
