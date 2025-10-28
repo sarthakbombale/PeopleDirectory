@@ -1,22 +1,30 @@
-*{
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* Make tables responsive: allow cells to wrap instead of forcing horizontal scroll */
+/* Global container styles */
+body {
+  overflow-x: hidden; /* prevent horizontal scroll */
+}
+
+/* Table base styles */
 table {
   width: 100%;
   border-collapse: collapse;
-  table-layout: fixed; /* let columns share available width */
+  table-layout: fixed;
 }
 
+/* Cell styles - strict boundaries */
 th, td {
   padding: 8px 10px;
   text-align: left;
-  white-space: normal; /* allow wrapping */
-  overflow-wrap: anywhere; /* break long words/URLs */
-  word-break: break-word;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  position: relative; /* for absolute positioning of overflowed content */
 }
 
 /* Make pagination and controls immune to the table's horizontal scrollbar */
@@ -64,8 +72,8 @@ th, td {
 
 /* Smaller, readable email text with truncation */
 .email-text {
-  font-size: 0.85rem;
-  color: inherit;
+  font-size: 0.7rem;
+  color: #374151;
   opacity: 0.9;
   display: inline-block;
   max-width: 100%;
@@ -81,38 +89,41 @@ th, td {
   border-radius: 20px;
   padding: 3px 8px;
   margin-right: 5px;
-  font-size: 0.8rem;
+  font-size: 0.1rem;
 }
 
 /* Role text: very small, single-line, red color (won't push into another row) */
 .role-text {
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   color: #d9534f; /* red */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   display: inline-block;
   max-width: 100%;
+  padding: 1px 0;
 }
 
 /* Team badge base styles */
 .team-badge {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  background-color: #f3f4f6; /* neutral light */
-  color: #111827;
-  border-radius: 999px; /* capsule */
-  padding: 2px 8px;
-  margin-right: 6px;
-  font-size: 0.62rem; /* very small but readable */
-  line-height: 1;
+  justify-content: center;
+  background: #f3f4f6;
+  color: #374151;
+  border-radius: 9999px;
+  padding: 1px 6px;
+  margin: 0 3px 0 0;
+  font-size: 0.65rem;
+  line-height: 1.2;
+  height: 16px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 92px; /* keep badges compact */
-  height: 22px;
+  max-width: 70px;
+  min-width: 16px;
   box-sizing: border-box;
+  vertical-align: middle;
 }
 
 /* Alternate color for variety */
