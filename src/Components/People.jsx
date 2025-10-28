@@ -271,13 +271,13 @@ function People() {
               }}
             >
               {/* Explicit column width allocations so Email, Teams and Actions get enough space */}
-              <colgroup>
-                <col style={{ width: '30%' }} /> {/* Name */}
-                <col style={{ width: '10%' }} /> {/* Status */}
-                <col style={{ width: '12%' }} /> {/* Role */}
-                <col style={{ width: '20%' }} /> {/* Email */}
-                <col style={{ width: '18%' }} /> {/* Teams */}
-                <col style={{ width: '10%' }} /> {/* Actions */}
+               <colgroup>
+                <col style={{ width: '25%' }} /> {/* Name - enough for name+username */}
+                <col style={{ width: '8%' }} />  {/* Status - compact */}
+                <col style={{ width: '10%' }} /> {/* Role - small text */}
+                <col style={{ width: '22%' }} /> {/* Email - needs space for long addresses */}
+                <col style={{ width: '25%' }} /> {/* Teams - space for 2-3 small badges */}
+                <col style={{ width: '10%' }} /> {/* Actions - fixed width */}
               </colgroup>
             <thead>
               {/* Removed bottom border on header row to avoid the thin horizontal line */}
