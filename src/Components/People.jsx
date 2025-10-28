@@ -132,7 +132,6 @@ function People() {
             borderRadius: "10px",
             padding: "20px",
             boxShadow: theme.colors.cardShadow,
-            overflowX: "auto",
             transition: "all 0.25s ease",
           }}
         >
@@ -258,15 +257,18 @@ function People() {
           </div>
 
           {/* Table */}
-          <table
-            width="100%"
-            cellPadding="10"
-            style={{
-              borderCollapse: "collapse",
-              minWidth: "1000px", // 👈 Wider table
-              color: theme.colors.text,
-            }}
-          >
+          {/* Wrap the table in a horizontally-scrollable container so the scrollbar appears under the table only
+              (prevents the scrollbar from appearing below the pagination). */}
+          <div style={{ overflowX: "auto" }}>
+            <table
+              width="100%"
+              cellPadding="10"
+              style={{
+                borderCollapse: "collapse",
+                minWidth: "1000px", // 👈 Wider table
+                color: theme.colors.text,
+              }}
+            >
             <thead>
               <tr style={{ borderBottom: `2px solid ${theme.colors.tableBorder}`, background: theme.colors.tableHeader }}>
                 <th align="left">Name</th>
@@ -297,7 +299,8 @@ function People() {
                 </tr>
               )}
             </tbody>
-          </table>
+            </table>
+          </div>
 
           {/* Pagination */}
           <div
