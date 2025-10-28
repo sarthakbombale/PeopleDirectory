@@ -52,35 +52,37 @@ function TeamMember({ member, onDelete, onEdit, onSelect }) {
         <span className="email-text" title={member.email}>{member.email}</span>
       </td>
 
-      <td>
-        {/* Show first two teams, then a +N indicator if more exist */}
-        {member.teams && member.teams.length > 0 ? (
-          (() => {
-            const visible = member.teams.slice(0, 2);
-            const extra = member.teams.length - visible.length;
-            return (
-              <>
-                {visible.map((team, index) => (
-                  <span
-                    key={index}
-                    className={`team-badge ${index % 2 === 1 ? 'alt' : ''}`}
-                    title={team}
-                  >
-                    {team}
-                  </span>
-                ))}
-                {extra > 0 && (
-                  <span
-                    className="team-badge team-more"
-                    title={member.teams.slice(2).join(', ')}
-                  >
-                    +{extra}
-                  </span>
-                )}
-              </>
-            );
-          })()
-        ) : null}
+      <td data-teams>
+        <div className="team-badges-container">
+          {member.teams && member.teams.length > 0 ? (
+            (() => {
+              const visible = member.teams.slice(0, 2);
+              const extra = member.teams.length - visible.length;
+              return (
+                <>
+                  {visible.map((team, index) => (
+                    <span
+                      key={index}
+                      className="team-badge"
+                      data-team={team}
+                      title={team}
+                    >
+                      {team}
+                    </span>
+                  ))}
+                  {extra > 0 && (
+                    <span
+                      className="team-badge"
+                      title={member.teams.slice(2).join(', ')}
+                    >
+                      +{extra}
+                    </span>
+                  )}
+                </>
+              );
+            })()
+          ) : null}
+        </div>
       </td>
 
       <td onClick={(e) => e.stopPropagation()}>

@@ -9,6 +9,47 @@ body {
   overflow-x: hidden; /* prevent horizontal scroll */
 }
 
+/* Responsive container */
+@media screen and (max-width: 1200px) {
+  .table-scroll-wrapper {
+    margin: 0 -10px;
+    padding: 0 10px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .table-scroll-wrapper table {
+    font-size: 0.9rem;
+  }
+  
+  .member-name-text {
+    max-width: 120px;
+  }
+  
+  .email-text {
+    font-size: 0.65rem;
+    max-width: 140px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .table-scroll-wrapper table {
+    font-size: 0.8rem;
+  }
+  
+  .member-name-text {
+    max-width: 100px;
+  }
+  
+  .email-text {
+    max-width: 120px;
+  }
+  
+  th, td {
+    padding: 6px 8px;
+  }
+}
+
 /* Table base styles */
 table {
   width: 100%;
@@ -18,13 +59,48 @@ table {
 
 /* Cell styles - strict boundaries */
 th, td {
-  padding: 8px 10px;
+  padding: 12px;
   text-align: left;
-  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 100%;
-  position: relative; /* for absolute positioning of overflowed content */
+  position: relative;
+}
+
+/* Responsive table styles */
+@media screen and (max-width: 1024px) {
+  th, td {
+    padding: 10px;
+  }
+  
+  .table-scroll-wrapper table td[data-teams] {
+    max-width: 200px;
+    white-space: normal;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  th, td {
+    padding: 8px;
+  }
+  
+  .table-scroll-wrapper table td[data-teams] {
+    max-width: 150px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  th, td {
+    padding: 6px;
+  }
+  
+  .table-scroll-wrapper table td[data-teams] {
+    max-width: 120px;
+  }
+  
+  .table-scroll-wrapper {
+    margin: 0 -5px;
+  }
 }
 
 /* Make pagination and controls immune to the table's horizontal scrollbar */
@@ -109,21 +185,121 @@ th, td {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: #f3f4f6;
-  color: #374151;
-  border-radius: 9999px;
-  padding: 1px 6px;
-  margin: 0 3px 0 0;
-  font-size: 0.65rem;
-  line-height: 1.2;
-  height: 16px;
+  background: transparent;
+  color: var(--text-color, #374151);
+  border: 1.5px solid var(--border-color, #000);
+  border-radius: 999px;
+  padding: 1px 10px;
+  margin: 0 4px 4px 0;
+  font-size: 0.7rem;
+  font-weight: 500;
+  line-height: 1.4;
+  height: 20px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 70px;
-  min-width: 16px;
+  max-width: 80px;
+  min-width: 20px;
   box-sizing: border-box;
   vertical-align: middle;
+  transition: all 0.2s ease;
+}
+
+/* Theme-specific styles */
+[data-theme="light"] .team-badge {
+  --text-color: #000000;
+  --border-color: #000000;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+[data-theme="dark"] .team-badge {
+  --text-color: #ffffff;
+  --border-color: #ffffff;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+/* Team-specific colors */
+.team-badge[data-team="Design"] {
+  border-color: #FF5733;
+  color: var(--text-color);
+}
+
+.team-badge[data-team="Product"] {
+  border-color: #33FF57;
+  color: var(--text-color);
+}
+
+.team-badge[data-team="Marketing"] {
+  border-color: #3357FF;
+  color: var(--text-color);
+}
+
+/* Team badge container */
+.team-badges-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
+  max-width: 100%;
+}
+
+/* Responsive styles for team badges */
+@media screen and (max-width: 1024px) {
+  .team-badge {
+    font-size: 0.65rem;
+    height: 18px;
+    padding: 1px 8px;
+    max-width: 70px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .team-badge {
+    font-size: 0.6rem;
+    height: 16px;
+    padding: 1px 6px;
+    max-width: 60px;
+    margin: 0 3px 3px 0;
+  }
+  
+  .team-badges-container {
+    gap: 3px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .team-badge {
+    font-size: 0.55rem;
+    height: 14px;
+    padding: 0 5px;
+    max-width: 50px;
+    margin: 0 2px 2px 0;
+  }
+  
+  .team-badges-container {
+    gap: 2px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .team-badge {
+    font-size: 0.6rem;
+    height: 16px;
+    padding: 0 6px;
+    max-width: 55px;
+    min-width: 16px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .team-badge {
+    font-size: 0.55rem;
+    height: 14px;
+    padding: 0 4px;
+    max-width: 45px;
+    min-width: 14px;
+    margin: 0 2px 2px 0;
+  }
 }
 
 /* Alternate color for variety */
