@@ -269,6 +269,15 @@ function People() {
                 color: theme.colors.text,
               }}
             >
+              {/* Explicit column width allocations so Email, Teams and Actions get enough space */}
+              <colgroup>
+                <col style={{ width: '30%' }} /> {/* Name */}
+                <col style={{ width: '10%' }} /> {/* Status */}
+                <col style={{ width: '12%' }} /> {/* Role */}
+                <col style={{ width: '20%' }} /> {/* Email */}
+                <col style={{ width: '18%' }} /> {/* Teams */}
+                <col style={{ width: '10%' }} /> {/* Actions */}
+              </colgroup>
             <thead>
               {/* Removed bottom border on header row to avoid the thin horizontal line */}
               <tr style={{ background: theme.colors.tableHeader }}>
