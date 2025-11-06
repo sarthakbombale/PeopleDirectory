@@ -1,4 +1,3 @@
-// Overview.jsx
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import People from "./People";
@@ -12,10 +11,10 @@ function Overview() {
       style={{
         marginLeft: "220px", // sidebar width
         marginTop: "60px", // header height
-        height: "calc(100vh - 60px)",
+        minHeight: "calc(100vh - 60px)", // ✅ use minHeight not fixed height
         backgroundColor: theme.colors.surface,
         color: theme.colors.text,
-        overflowY: "auto",
+        padding: "20px",
         transition: "background-color 0.3s ease",
       }}
     >
