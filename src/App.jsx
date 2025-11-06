@@ -5,15 +5,17 @@ import Overview from "./Components/Overview";
 import { ThemeProvider } from "./context/ThemeContext";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Sidebar from "./Components/Sidebar";
 
 function App() {
   return (
     <ThemeProvider>
       <Router>
-        <div style={{ 
+        <div style={{
           minHeight: '100vh',
           transition: 'background-color 0.3s ease'
         }}>
+          <Sidebar />
           <Header />
           <Routes>
             {/* Everything related to sidebar and main content */}

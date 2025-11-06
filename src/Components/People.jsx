@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react";
 import TeamMember from "./TeamMember";
 import { members as data } from "../data";
-import { FaCheckCircle, FaSearch, FaTimes, FaUserPlus } from "react-icons/fa";
+import { FaTimes, FaUserPlus } from "react-icons/fa";
 import EditMemberModal from "./EditMemberModal";
 import AddMemberModal from "./AddMemberModal";
 import { toast } from "react-toastify";
 import { useTheme } from "../context/ThemeContext";
+import { LuFilter } from "react-icons/lu";
 
-// Get stored members from localStorage or use default data
 const getStoredMembers = () => {
   try {
-    const storedMembers = localStorage.getItem('members');
+    const storedMembers = localStorage.getItem("members");
     return storedMembers ? JSON.parse(storedMembers) : data;
   } catch {
     return data;
@@ -23,25 +23,20 @@ function People() {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedMember, setSelectedMember] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedRole, setSelectedRole] = useState("");
-  const [selectedTeam, setSelectedTeam] = useState("");
+  const [editingMember, setEditingMember] = useState(null);
+  const [showAddModal, setShowAddModal] = useState(false);
 
-  // Save members to localStorage whenever they change
   useEffect(() => {
-    localStorage.setItem('members', JSON.stringify(members));
+    localStorage.setItem("members", JSON.stringify(members));
   }, [members]);
 
   const membersPerPage = 10;
 
-  // Filter Logic
-  const filteredMembers = members.filter((m) => {
-    const matchName =
-      m.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      m.username.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchRole = selectedRole ? m.role === selectedRole : true;
-    const matchTeam = selectedTeam ? m.teams.includes(selectedTeam) : true;
-    return matchName && matchRole && matchTeam;
-  });
+  const filteredMembers = members.filter((m) =>
+    [m.name, m.username].some((v) =>
+      v.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+  );
 
   const indexOfLast = currentPage * membersPerPage;
   const indexOfFirst = indexOfLast - membersPerPage;
@@ -54,14 +49,19 @@ function People() {
 
     const toastId = toast(
       ({ closeToast }) => (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-          <div>Are you sure you want to delete <strong>{member.name}</strong>?</div>
-          <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          <div>
+            Are you sure you want to delete <strong>{member.name}</strong>?
+          </div>
+          <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
             <button
-              onClick={() => {
-                toast.dismiss(toastId);
+              onClick={() => toast.dismiss(toastId)}
+              style={{
+                padding: "6px 10px",
+                borderRadius: 6,
+                border: `1px solid ${theme.colors.buttonBorder}`,
+                background: theme.colors.buttonBg,
               }}
-              style={{ padding: '6px 10px', borderRadius: 6, border: `1px solid ${theme.colors.buttonBorder}`, background: theme.colors.buttonBg }}
             >
               Cancel
             </button>
@@ -72,7 +72,13 @@ function People() {
                 toast.dismiss(toastId);
                 toast.error(`${member.name} deleted`, { autoClose: 3000 });
               }}
-              style={{ padding: '6px 10px', borderRadius: 6, border: 'none', background: '#d9534f', color: '#fff' }}
+              style={{
+                padding: "6px 10px",
+                borderRadius: 6,
+                border: "none",
+                background: "#d9534f",
+                color: "#fff",
+              }}
             >
               Delete
             </button>
@@ -86,9 +92,6 @@ function People() {
       }
     );
   };
-
-  const [editingMember, setEditingMember] = useState(null);
-  const [showAddModal, setShowAddModal] = useState(false);
 
   const editMember = (id) => {
     const member = members.find((m) => m.id === id);
@@ -111,13 +114,12 @@ function People() {
         style={{
           display: "flex",
           gap: "25px",
-          padding: "20px",
           fontFamily: "Arial, sans-serif",
           background: theme.colors.background,
           color: theme.colors.text,
           minHeight: "100vh",
           transition: "all 0.25s ease",
-          flexWrap: "wrap", // allow wrapping for smaller screens
+          flexWrap: "wrap",
         }}
       >
         {/* TABLE SIDE */}
@@ -126,129 +128,83 @@ function People() {
             flex: 1,
             minWidth: 0,
             background: theme.colors.surface,
-            borderRadius: "10px",
             padding: "20px",
             boxShadow: theme.colors.cardShadow,
             transition: "all 0.25s ease",
           }}
         >
-          <h2 style={{ marginBottom: "15px", color: theme.colors.primary }}>
-            Team Members ({filteredMembers.length})
-          </h2>
-
-          {/* Search + Filters */}
+          {/* Header Bar */}
           <div
             style={{
               display: "flex",
-              flexWrap: "wrap",
+              justifyContent: "space-between",
               alignItems: "center",
-              gap: "10px",
-              marginBottom: "20px",
+              marginBottom: "15px",
             }}
           >
-            <input
-              type="text"
-              placeholder="Search by name"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+            {/* Left side - Title */}
+            <h2
               style={{
-                padding: "8px 12px",
-                borderRadius: "6px",
-                border: `1px solid ${theme.colors.border}`,
-                background: theme.colors.surface,
-                color: theme.colors.text,
-                flex: "1",
-                minWidth: "220px",
-              }}
-            />
-
-            <select
-              value={selectedRole}
-              onChange={(e) => setSelectedRole(e.target.value)}
-              style={{
-                padding: "8px 12px",
-                borderRadius: "6px",
-                border: `1px solid ${theme.colors.border}`,
-                background: theme.colors.surface,
-                color: theme.colors.text,
+                color: theme.colors.primary,
+                margin: 0,
+                fontSize: "22px",
+                fontWeight: "600",
               }}
             >
-              <option value="">All Roles</option>
-              {[...new Set(data.map((m) => m.role))].map((role) => (
-                <option key={role} value={role}>
-                  {role}
-                </option>
-              ))}
-            </select>
+              Team Members ({filteredMembers.length})
+            </h2>
 
-            <select
-              value={selectedTeam}
-              onChange={(e) => setSelectedTeam(e.target.value)}
+            {/* Right side - Controls */}
+            <div
               style={{
-                padding: "8px 12px",
-                borderRadius: "6px",
-                border: `1px solid ${theme.colors.border}`,
-                background: theme.colors.surface,
-                color: theme.colors.text,
-              }}
-            >
-              <option value="">All Teams</option>
-              {[...new Set(data.flatMap((m) => m.teams))].map((team) => (
-                <option key={team} value={team}>
-                  {team}
-                </option>
-              ))}
-            </select>
-
-            <button
-              onClick={() => {
-                setSearchTerm("");
-                setSelectedRole("");
-                setSelectedTeam("");
-              }}
-              style={{
-                background: "transparent",
-                color: "red",
-                border: "2px solid red",
-                padding: "8px 16px",
-                borderRadius: "6px",
-                cursor: "pointer",
-                fontWeight: "500",
-                display:
-                  searchTerm || selectedRole || selectedTeam
-                    ? "block"
-                    : "none",
-                transition: "all 0.2s ease",
-              }}
-              onMouseOver={(e) => {
-                e.target.style.background = "red";
-                e.target.style.color = "#fff";
-              }}
-              onMouseOut={(e) => {
-                e.target.style.background = "transparent";
-                e.target.style.color = "red";
-              }}
-            >
-              Clear Filters
-            </button>
-
-            <button
-              onClick={() => setShowAddModal(true)}
-              style={{
-                background: theme.colors.primary,
-                color: "#fff",
-                border: "none",
-                padding: "8px 16px",
-                borderRadius: "6px",
-                cursor: "pointer",
                 display: "flex",
                 alignItems: "center",
-                gap: "6px",
+                gap: "10px",
               }}
             >
-              <FaUserPlus size={16} />
-              Add Member
-            </button>
+              <input
+                type="text"
+                placeholder="Search by name"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                style={{
+                  padding: "8px 10px",
+                  borderRadius: "6px",
+                  border: `1px solid ${theme.colors.border}`,
+                  background: theme.colors.surface,
+                  color: theme.colors.text,
+                  width: "200px",
+                  outline: "none",
+                }}
+              />
+
+              <LuFilter
+                style={{
+                  cursor: "pointer",
+                  color: theme.colors.text,
+                  fontSize: "20px",
+                }}
+              />
+
+              <button
+                onClick={() => setShowAddModal(true)}
+                style={{
+                  background: theme.colors.primary,
+                  color: "#fff",
+                  border: "none",
+                  padding: "8px 16px",
+                  borderRadius: "6px",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  fontWeight: "500",
+                }}
+              >
+                <FaUserPlus size={16} />
+                Add Member
+              </button>
+            </div>
           </div>
 
           {/* Table */}
@@ -269,14 +225,6 @@ function People() {
                 color: theme.colors.text,
               }}
             >
-              <colgroup>
-                <col style={{ width: "auto" }} />
-                <col style={{ width: "auto" }} />
-                <col style={{ width: "auto" }} />
-                <col style={{ width: "auto" }} />
-                <col style={{ width: "auto" }} />
-                <col style={{ width: "auto" }} />
-              </colgroup>
               <thead>
                 <tr style={{ background: theme.colors.tableHeader }}>
                   <th align="left">Name</th>
@@ -300,10 +248,7 @@ function People() {
                   ))
                 ) : (
                   <tr>
-                    <td
-                      colSpan="6"
-                      style={{ textAlign: "center", padding: "20px" }}
-                    >
+                    <td colSpan="6" style={{ textAlign: "center", padding: "20px" }}>
                       No members found.
                     </td>
                   </tr>
@@ -361,9 +306,7 @@ function People() {
             ))}
 
             <button
-              onClick={() =>
-                setCurrentPage((p) => Math.min(p + 1, totalPages))
-              }
+              onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
               disabled={currentPage === totalPages}
               style={{
                 background: theme.colors.buttonBg,
@@ -380,7 +323,7 @@ function People() {
           </div>
         </div>
 
-        {/* Detail Panel (right side) */}
+        {/* DETAILS PANEL */}
         {selectedMember && (
           <div
             style={{
@@ -388,7 +331,6 @@ function People() {
               minWidth: 0,
               position: "relative",
               background: theme.colors.surface,
-              borderRadius: "10px",
               boxShadow: theme.colors.cardShadow,
               overflow: "hidden",
               display: "flex",
@@ -413,6 +355,7 @@ function People() {
             >
               <FaTimes />
             </button>
+
             <div
               style={{
                 background: theme.colors.primary,
@@ -442,16 +385,13 @@ function People() {
             </div>
 
             <div style={{ padding: "20px" }}>
-              <h4 style={{ paddingBottom: "8px" }}>
-                Personal Information
-              </h4>
+              <h4>Personal Information</h4>
               <p>
                 <strong>Date of Birth:</strong>{" "}
                 {selectedMember.dob || "29-04-2005"}
               </p>
               <p>
-                <strong>Gender:</strong>{" "}
-                {selectedMember.gender || "Female"}
+                <strong>Gender:</strong> {selectedMember.gender || "Female"}
               </p>
               <p>
                 <strong>Nationality:</strong>{" "}
@@ -468,48 +408,11 @@ function People() {
                 <strong>Work Email:</strong>{" "}
                 {selectedMember.workEmail || selectedMember.email}
               </p>
-
-              <h4
-                style={{
-                  paddingBottom: "8px",
-                  marginTop: "20px",
-                }}
-              >
-                Research & Publication
-              </h4>
-              <p>
-                <strong>
-                  AI and User Experience: The Future of Design
-                </strong>
-                <br />
-                Published in the Journal of Modern Design • 2022
-              </p>
-              <p
-                style={{
-                  fontSize: "0.9rem",
-                  color: theme.colors.secondaryText,
-                }}
-              >
-                AI and IoT-based real-time monitoring of electrical machines
-                using Python. Abstract: Maintaining induction motors in good
-                working order before they fail...
-              </p>
-              <a
-                href="#"
-                style={{
-                  color: theme.colors.primary,
-                  fontWeight: "bold",
-                  textDecoration: "none",
-                }}
-              >
-                → See Publication
-              </a>
             </div>
           </div>
         )}
       </div>
 
-      {/* Edit modal */}
       {editingMember && (
         <EditMemberModal
           member={editingMember}
@@ -518,7 +421,6 @@ function People() {
         />
       )}
 
-      {/* Add Member modal */}
       {showAddModal && (
         <AddMemberModal
           onClose={() => setShowAddModal(false)}
@@ -529,54 +431,9 @@ function People() {
           }}
         />
       )}
-
-      {/* Responsive table CSS */}
-      <style>
-        {`
-          /* Tablet adjustments */
-          @media (max-width: 900px) {
-            table {
-              font-size: 14px;
-            }
-            th, td {
-              padding: 8px;
-            }
-          }
-
-          /* Mobile: transform table to cards */
-          @media (max-width: 700px) {
-            table thead {
-              display: none;
-            }
-            table, table tbody, table tr, table td {
-              display: block;
-              width: 100%;
-            }
-            table tr {
-              margin-bottom: 15px;
-              border: 1px solid ${theme.colors.border};
-              border-radius: 8px;
-              padding: 10px;
-              background: ${theme.colors.surface};
-            }
-            table td {
-              text-align: left;
-              padding-left: 50%;
-              position: relative;
-            }
-            table td::before {
-              content: attr(data-label);
-              position: absolute;
-              left: 10px;
-              width: 45%;
-              white-space: nowrap;
-              font-weight: bold;
-            }
-          }
-        `}
-      </style>
     </>
   );
 }
 
 export default People;
+

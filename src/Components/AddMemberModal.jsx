@@ -358,7 +358,7 @@ function AddMemberModal({ onClose, onSave }) {
                 cursor: 'pointer',
               }}
             >
-              Add Member
+              ember
             </button>
           </div>
         </form>
