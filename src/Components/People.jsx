@@ -173,7 +173,7 @@ function People() {
                   border: `1px solid ${theme.colors.border}`,
                   background: theme.colors.surface,
                   color: theme.colors.text,
-                  width: "200px",
+                  width: "400px",
                   outline: "none",
                 }}
               />

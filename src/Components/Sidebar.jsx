@@ -1,4 +1,3 @@
-// Sidebar.jsx
 import React from "react";
 import { Link } from "react-router-dom";
 import { RxGrid } from "react-icons/rx";
@@ -12,10 +11,10 @@ function Sidebar() {
     <div
       style={{
         position: "fixed",
-        top: "60px", // exactly below Header (Header height = 60px)
+        top: 0, // start from top
         left: 0,
-        width: "210px",
-        height: "calc(100vh - 60px)", // full height minus header
+        width: "220px",
+        height: "100vh", // full viewport height
         backgroundColor: theme.colors.sidebarBg,
         padding: "20px",
         borderRight: `1px solid ${theme.colors.border}`,
@@ -23,7 +22,10 @@ function Sidebar() {
         flexDirection: "column",
         justifyContent: "space-between",
         transition: "all 0.3s ease",
-        overflowY: "auto", // allow scroll if sidebar content exceeds screen
+        overflowY: "auto",
+        fontFamily:
+          'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
+          fontSize:'20px'
       }}
     >
       {/* Sidebar Top Section */}
@@ -38,7 +40,7 @@ function Sidebar() {
               fontWeight: "bold",
               margin: 0,
               lineHeight: 1,
-              fontSize: "20px",
+              fontSize: "35px",
             }}
           >
             PEOPLE.CO

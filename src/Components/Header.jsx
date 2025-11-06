@@ -9,14 +9,16 @@ function Header() {
 
   return (
     <Navbar
-      fixed="top" // ✅ keeps header fixed
+      fixed="top"
       expand="lg"
       style={{
         backgroundColor: theme.colors.headerBg,
         boxShadow: theme.colors.cardShadow,
         transition: "all 0.3s ease",
         height: "60px",
-        zIndex: 1000, // stays above sidebar/content
+        zIndex: 1000,
+        marginLeft: "220px", // ⬅️ offset to match sidebar width
+        width: "calc(100% - 220px)", // ⬅️ remaining width
       }}
     >
       <Container
@@ -28,7 +30,6 @@ function Header() {
           gap: "20px",
         }}
       >
-        {/* Theme toggle button */}
         <button
           onClick={theme.toggleTheme}
           style={{
@@ -46,21 +47,13 @@ function Header() {
           {theme.isDarkMode ? <FaSun size={22} /> : <FaMoon size={22} />}
         </button>
 
-        {/* Bell icon */}
         <FaRegBell
           size={22}
           color={theme.colors.primary}
           style={{ cursor: "pointer" }}
         />
 
-        {/* Profile */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "8px",
-          }}
-        >
+        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
           <img
             src={profilePic}
             alt="User"

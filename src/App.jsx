@@ -11,14 +11,16 @@ function App() {
   return (
     <ThemeProvider>
       <Router>
-        <div style={{
-          minHeight: '100vh',
-          transition: 'background-color 0.3s ease'
-        }}>
+        <div
+          style={{
+            minHeight: "100vh",
+            transition: "background-color 0.3s ease",
+            overflow: "hidden", // ✅ prevent unwanted outer scroll
+          }}
+        >
           <Sidebar />
           <Header />
           <Routes>
-            {/* Everything related to sidebar and main content */}
             <Route path="/*" element={<Overview />} />
           </Routes>
           <ToastContainer

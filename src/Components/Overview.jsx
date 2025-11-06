@@ -14,7 +14,6 @@ function Overview() {
         minHeight: "calc(100vh - 60px)", // ✅ use minHeight not fixed height
         backgroundColor: theme.colors.surface,
         color: theme.colors.text,
-        padding: "20px",
         transition: "background-color 0.3s ease",
       }}
     >
@@ -27,6 +26,8 @@ function Overview() {
                 fontWeight: "bold",
                 color: theme.colors.text,
                 marginTop: "10px",
+                padding:"30px"
+
               }}
             >
               Welcome, Sarthak Bombale!
