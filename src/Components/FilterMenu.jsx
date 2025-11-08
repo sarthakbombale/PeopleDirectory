@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import { Dropdown } from "react-bootstrap";
 import { LuFilter } from "react-icons/lu";
 
-const FilterMenu = ({ onFilterChange }) => {
+const FilterMenu = ({ selectedFilter, onFilterChange }) => {
   const [show, setShow] = useState(false);
+
+  const filterOptions = ["Name", "Status", "Role", "Email", "Teams"];
 
   return (
     <Dropdown
@@ -23,11 +25,11 @@ const FilterMenu = ({ onFilterChange }) => {
       </Dropdown.Toggle>
 
       <Dropdown.Menu align="end" style={{ minWidth: "150px" }}>
-        {["All", "Name", "Status", "Role", "Email", "Teams"].map((opt) => (
+        {filterOptions.map((opt) => (
           <Dropdown.Item
             key={opt}
+            active={selectedFilter === opt}
             onClick={() => onFilterChange(opt)}
-            style={{ cursor: "pointer" }}
           >
             {opt}
           </Dropdown.Item>

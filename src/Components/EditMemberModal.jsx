@@ -9,8 +9,8 @@ export default function EditMemberModal({ member, onClose, onSave }) {
     role: "",
     teams: "",
     avatarUrl: "",
+    status: "",
   });
-  const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
 
   useEffect(() => {
@@ -21,6 +21,7 @@ export default function EditMemberModal({ member, onClose, onSave }) {
         role: member.role || "",
         teams: (member.teams || []).join(", "),
         avatarUrl: member.avatar || "",
+        status: member.status || "",
       });
       setImagePreview(member.avatar || "");
     }
@@ -30,20 +31,9 @@ export default function EditMemberModal({ member, onClose, onSave }) {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm((s) => ({ ...s, [name]: value }));
-    if (name === 'avatarUrl' && value) {
+    setForm((prev) => ({ ...prev, [name]: value }));
+    if (name === "avatarUrl") {
       setImagePreview(value);
-      setImageFile(null);
-    }
-  };
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setImageFile(file);
-      const previewUrl = URL.createObjectURL(file);
-      setImagePreview(previewUrl);
-      setForm(s => ({ ...s, avatarUrl: '' })); // Clear URL input when file is selected
     }
   };
 
@@ -55,9 +45,10 @@ export default function EditMemberModal({ member, onClose, onSave }) {
       email: form.email,
       role: form.role,
       teams: form.teams.split(",").map((t) => t.trim()).filter(Boolean),
-      avatar: imageFile ? URL.createObjectURL(imageFile) : form.avatarUrl || member.avatar,
+      avatar: form.avatarUrl || member.avatar,
+      status: form.status,
     };
-    onSave(updated); // sends data to parent
+    onSave(updated);
   };
 
   return (
@@ -70,6 +61,8 @@ export default function EditMemberModal({ member, onClose, onSave }) {
         alignItems: "center",
         justifyContent: "center",
         zIndex: 9999,
+        overflowY: "auto",
+        padding: "40px 10px",
       }}
       onClick={onClose}
     >
@@ -83,55 +76,65 @@ export default function EditMemberModal({ member, onClose, onSave }) {
           borderRadius: 8,
           padding: 20,
           boxShadow: theme.colors.cardShadow,
+          maxHeight: "90vh",
+          overflowY: "auto",
         }}
       >
         <h3 style={{ marginTop: 0 }}>Edit Member</h3>
-        <p style={{ marginTop: 6, marginBottom: 12, color: theme.colors.secondaryText, fontSize: '0.95rem' }}>
-          Editable fields: <strong>Name</strong>, <strong>Email</strong>, <strong>Role</strong>, <strong>Teams</strong>.
-          <br />ID is shown below (read-only)
+        <p
+          style={{
+            marginTop: 6,
+            marginBottom: 12,
+            color: theme.colors.secondaryText,
+            fontSize: "0.95rem",
+          }}
+        >
+          Editable fields: <strong>Name</strong>, <strong>Email</strong>,{" "}
+          <strong>Role</strong>, <strong>Teams</strong>.
+          <br />
+          ID is shown below (read-only)
         </p>
+
         <form onSubmit={handleSubmit}>
-          <div style={{ display: "grid", gap: 8 }}>
-            <label style={{ fontSize: 12, color: theme.colors.secondaryText }}>Profile Image</label>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginBottom: '10px' }}>
+          <div style={{ display: "grid", gap: 10 }}>
+            {/* Image URL Section */}
+            <label style={{ fontSize: 12, color: theme.colors.secondaryText }}>
+              Profile Image (URL only)
+            </label>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "15px",
+                marginBottom: "10px",
+              }}
+            >
               {imagePreview && (
-                <div style={{
-                  width: '60px',
-                  height: '60px',
-                  borderRadius: '50%',
-                  overflow: 'hidden',
-                  border: `1px solid ${theme.colors.border}`,
-                }}>
+                <div
+                  style={{
+                    width: "60px",
+                    height: "60px",
+                    borderRadius: "50%",
+                    overflow: "hidden",
+                    border: `1px solid ${theme.colors.border}`,
+                  }}
+                >
                   <img
                     src={imagePreview}
                     alt="Preview"
                     style={{
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'cover',
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
                     }}
                   />
                 </div>
               )}
               <div style={{ flex: 1 }}>
                 <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  style={{
-                    marginBottom: '8px',
-                    padding: 8,
-                    borderRadius: 6,
-                    border: `1px solid ${theme.colors.border}`,
-                    background: theme.colors.surface,
-                    color: theme.colors.text,
-                    width: '100%',
-                  }}
-                />
-                <input
                   type="text"
                   name="avatarUrl"
-                  placeholder="Or enter image URL"
+                  placeholder="Enter image URL"
                   value={form.avatarUrl}
                   onChange={handleChange}
                   style={{
@@ -140,14 +143,26 @@ export default function EditMemberModal({ member, onClose, onSave }) {
                     border: `1px solid ${theme.colors.border}`,
                     background: theme.colors.surface,
                     color: theme.colors.text,
-                    width: '100%',
+                    width: "100%",
                   }}
                 />
               </div>
             </div>
-            <div style={{ fontSize: 12, color: theme.colors.secondaryText }}>Upload a new image or enter an image URL.</div>
 
-            <label style={{ fontSize: 12, color: theme.colors.secondaryText }}>ID (read-only)</label>
+            <div
+              style={{
+                fontSize: 12,
+                color: theme.colors.secondaryText,
+                marginBottom: 10,
+              }}
+            >
+              Enter a direct image URL (e.g., https://example.com/avatar.jpg)
+            </div>
+
+            {/* ID (read-only) */}
+            <label style={{ fontSize: 12, color: theme.colors.secondaryText }}>
+              ID (read-only)
+            </label>
             <input
               name="id"
               value={member.id}
@@ -161,74 +176,75 @@ export default function EditMemberModal({ member, onClose, onSave }) {
               }}
             />
 
-            <label style={{ fontSize: 12, color: theme.colors.secondaryText }}>Full name</label>
-            <input
-              name="name"
-              placeholder="Full name"
-              value={form.name}
-              onChange={handleChange}
-              style={{
-                padding: 8,
-                borderRadius: 6,
-                border: `1px solid ${theme.colors.border}`,
-                background: theme.colors.surface,
-                color: theme.colors.text,
-              }}
-            />
-            <div style={{ fontSize: 12, color: theme.colors.secondaryText }}>Change the display name shown in the table.</div>
-            <label style={{ fontSize: 12, color: theme.colors.secondaryText }}>Email</label>
-            <input
-              name="email"
-              placeholder="Email"
-              value={form.email}
-              onChange={handleChange}
-              style={{
-                padding: 8,
-                borderRadius: 6,
-                border: `1px solid ${theme.colors.border}`,
-                background: theme.colors.surface,
-                color: theme.colors.text,
-              }}
-            />
-            <div style={{ fontSize: 12, color: theme.colors.secondaryText }}>Primary contact email for this member.</div>
-            <label style={{ fontSize: 12, color: theme.colors.secondaryText }}>Role</label>
-            <input
-              name="role"
-              placeholder="Role"
-              value={form.role}
-              onChange={handleChange}
-              style={{
-                padding: 8,
-                borderRadius: 6,
-                border: `1px solid ${theme.colors.border}`,
-                background: theme.colors.surface,
-                color: theme.colors.text,
-              }}
-            />
-            <div style={{ fontSize: 12, color: theme.colors.secondaryText }}>Job title or role shown in the table.</div>
-            <label style={{ fontSize: 12, color: theme.colors.secondaryText }}>Teams</label>
-            <input
-              name="teams"
-              placeholder="Teams (comma separated)"
-              value={form.teams}
-              onChange={handleChange}
-              style={{
-                padding: 8,
-                borderRadius: 6,
-                border: `1px solid ${theme.colors.border}`,
-                background: theme.colors.surface,
-                color: theme.colors.text,
-              }}
-            />
-            <div style={{ fontSize: 12, color: theme.colors.secondaryText }}>Comma-separated list (e.g. Design, Product).</div>
+            {/* Status */}
+            <div>
+              <label
+                style={{
+                  fontSize: 12,
+                  color: theme.colors.secondaryText,
+                  textTransform: "capitalize",
+                }}
+              >
+                Status
+              </label>
+              <select
+                name="status"
+                value={form.status}
+                onChange={handleChange}
+                style={{
+                  padding: 8,
+                  borderRadius: 6,
+                  border: `1px solid ${theme.colors.border}`,
+                  background: theme.colors.surface,
+                  color: theme.colors.text,
+                  width: "100%",
+                }}
+              >
+                <option value="">Select status</option>
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+                <option value="On Leave">On Leave</option>
+              </select>
+            </div>
+
+
+            {/* Editable Fields */}
+            {["name", "email", "role", "teams"].map((field) => (
+              <div key={field}>
+                <label
+                  style={{
+                    fontSize: 12,
+                    color: theme.colors.secondaryText,
+                    textTransform: "capitalize",
+                  }}
+                >
+                  {field}
+                </label>
+                <input
+                  name={field}
+                  placeholder={`Enter ${field}`}
+                  value={form[field]}
+                  onChange={handleChange}
+                  style={{
+                    padding: 8,
+                    borderRadius: 6,
+                    border: `1px solid ${theme.colors.border}`,
+                    background: theme.colors.surface,
+                    color: theme.colors.text,
+                    width: "100%",
+                  }}
+                />
+              </div>
+            ))}
           </div>
 
+          {/* Buttons */}
           <div
             style={{
               display: "flex",
               justifyContent: "flex-end",
               gap: 10,
-              marginTop: 15,
+              marginTop: 20,
             }}
           >
             <button
@@ -260,6 +276,6 @@ export default function EditMemberModal({ member, onClose, onSave }) {
         </form>
       </div>
     </div>
+
   );
 }
-

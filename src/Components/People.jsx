@@ -6,7 +6,6 @@ import EditMemberModal from "./EditMemberModal";
 import AddMemberModal from "./AddMemberModal";
 import { toast } from "react-toastify";
 import { useTheme } from "../context/ThemeContext";
-import { LuFilter } from "react-icons/lu";
 import FilterMenu from "./FilterMenu";
 
 const getStoredMembers = () => {
@@ -27,17 +26,32 @@ function People() {
   const [editingMember, setEditingMember] = useState(null);
   const [showAddModal, setShowAddModal] = useState(false);
 
+  // ✅ New states for filter
+  const [selectedFilter, setSelectedFilter] = useState("Name");
+
   useEffect(() => {
     localStorage.setItem("members", JSON.stringify(members));
   }, [members]);
 
   const membersPerPage = 10;
 
-  const filteredMembers = members.filter((m) =>
-    [m.name, m.username].some((v) =>
-      v.toLowerCase().includes(searchTerm.toLowerCase())
-    )
-  );
+  // ✅ Updated filter logic
+  const filteredMembers = members.filter((m) => {
+    const lower = searchTerm.toLowerCase();
+    switch (selectedFilter) {
+      case "Email":
+        return m.email?.toLowerCase().includes(lower);
+      case "Role":
+        return m.role?.toLowerCase().includes(lower);
+      case "Teams":
+        return m.team?.toLowerCase().includes(lower);
+      default:
+        return (
+          m.name?.toLowerCase().includes(lower) ||
+          m.username?.toLowerCase().includes(lower)
+        );
+    }
+  });
 
   const indexOfLast = currentPage * membersPerPage;
   const indexOfFirst = indexOfLast - membersPerPage;
@@ -141,6 +155,8 @@ function People() {
               justifyContent: "space-between",
               alignItems: "center",
               marginBottom: "15px",
+              flexWrap: "wrap",
+              gap: "10px",
             }}
           >
             {/* Left side - Title */}
@@ -161,11 +177,13 @@ function People() {
                 display: "flex",
                 alignItems: "center",
                 gap: "10px",
+                flexWrap: "wrap",
               }}
             >
+              {/* ✅ Search Input with dynamic placeholder */}
               <input
                 type="text"
-                placeholder="Search by name"
+                placeholder={`Search by ${selectedFilter}`}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 style={{
@@ -174,13 +192,16 @@ function People() {
                   border: `1px solid ${theme.colors.border}`,
                   background: theme.colors.surface,
                   color: theme.colors.text,
-                  width: "400px",
+                  width: "300px",
                   outline: "none",
                 }}
               />
 
-              <FilterMenu onFilterChange={(filter) => console.log("Selected:", filter)} />
-
+              {/* ✅ Filter Dropdown */}
+              <FilterMenu
+                selectedFilter={selectedFilter}
+                onFilterChange={setSelectedFilter}
+              />
 
               <button
                 onClick={() => setShowAddModal(true)}
@@ -398,8 +419,7 @@ function People() {
                 {selectedMember.contact || "1234567890"}
               </p>
               <p>
-                <strong>Email:</strong> {selectedMember.email}
-              </p>
+                <strong>Email:</strong> {selectedMember.email}</p>
               <p>
                 <strong>Work Email:</strong>{" "}
                 {selectedMember.workEmail || selectedMember.email}
@@ -432,4 +452,3 @@ function People() {
 }
 
 export default People;
-
