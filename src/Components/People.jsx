@@ -7,6 +7,7 @@ import AddMemberModal from "./AddMemberModal";
 import { toast } from "react-toastify";
 import { useTheme } from "../context/ThemeContext";
 import { LuFilter } from "react-icons/lu";
+import FilterMenu from "./FilterMenu";
 
 const getStoredMembers = () => {
   try {
@@ -178,13 +179,8 @@ function People() {
                 }}
               />
 
-              <LuFilter
-                style={{
-                  cursor: "pointer",
-                  color: theme.colors.text,
-                  fontSize: "20px",
-                }}
-              />
+              <FilterMenu onFilterChange={(filter) => console.log("Selected:", filter)} />
+
 
               <button
                 onClick={() => setShowAddModal(true)}
