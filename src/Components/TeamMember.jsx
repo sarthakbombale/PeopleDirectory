@@ -7,8 +7,8 @@ function TeamMember({ member, onDelete, onEdit, onSelect }) {
 
   // ✅ Team colors — polished and brand-like
   const teamColors = {
-    Design: "#F97316",      // warm orange
-    Product: "#16A34A",     // balanced green
+    Design: "#ff0000ff ",      // warm orange
+    Product: "  #0EA5E9",     // balanced green
     Marketing: "#2563EB",   // vivid blue
     Sales: "#EAB308",       // soft yellow-gold
     HR: "#9333EA",          // elegant purple
