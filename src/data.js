@@ -30,11 +30,9 @@ export const members = names.map((name, i) => {
       Math.floor(Math.random() * 4)
     ],
     email: generateEmail(username),
-    teams: ["Design", "Product", "Marketing"].slice(
-      0,
-      Math.floor(Math.random() * 3) + 1
-    ),
+    teams: ["Design", "Product", "Marketing", "Sales", "HR", "Engineering", "Support"]
+      .slice(0, Math.floor(Math.random() * 3) + 1),
+
     avatar: `https://i.pravatar.cc/150?img=${i + 1}`,
   };
 });
-  

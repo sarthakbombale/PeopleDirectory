@@ -25,8 +25,6 @@ function People() {
   const [searchTerm, setSearchTerm] = useState("");
   const [editingMember, setEditingMember] = useState(null);
   const [showAddModal, setShowAddModal] = useState(false);
-
-  // ✅ New states for filter
   const [selectedFilter, setSelectedFilter] = useState("Name");
 
   useEffect(() => {
@@ -35,16 +33,24 @@ function People() {
 
   const membersPerPage = 10;
 
-  // ✅ Updated filter logic
+  // ✅ Corrected filtering logic for all fields
   const filteredMembers = members.filter((m) => {
     const lower = searchTerm.toLowerCase();
+
     switch (selectedFilter) {
       case "Email":
         return m.email?.toLowerCase().includes(lower);
       case "Role":
         return m.role?.toLowerCase().includes(lower);
-      case "Teams":
-        return m.team?.toLowerCase().includes(lower);
+      case "Teams": {
+        const teamsArray = m.teams || [];
+        return teamsArray.some((team) =>
+          team.toLowerCase().includes(lower)
+        );
+      }
+
+      case "Status":
+        return m.status?.toLowerCase().includes(lower);
       default:
         return (
           m.name?.toLowerCase().includes(lower) ||
@@ -52,6 +58,7 @@ function People() {
         );
     }
   });
+
 
   const indexOfLast = currentPage * membersPerPage;
   const indexOfFirst = indexOfLast - membersPerPage;
@@ -100,25 +107,22 @@ function People() {
           </div>
         </div>
       ),
-      {
-        closeOnClick: false,
-        closeButton: false,
-        autoClose: false,
-      }
+      { closeOnClick: false, closeButton: false, autoClose: false }
     );
   };
 
   const editMember = (id) => {
     const member = members.find((m) => m.id === id);
-    if (!member) return;
-    setEditingMember(member);
+    if (member) setEditingMember(member);
   };
 
   const handleSaveMember = (updated) => {
     setMembers((prev) =>
       prev.map((m) => (m.id === updated.id ? { ...m, ...updated } : m))
     );
-    setSelectedMember((cur) => (cur?.id === updated.id ? { ...cur, ...updated } : cur));
+    setSelectedMember((cur) =>
+      cur?.id === updated.id ? { ...cur, ...updated } : cur
+    );
     setEditingMember(null);
     toast.success(`${updated.name} updated`);
   };
@@ -159,7 +163,6 @@ function People() {
               gap: "10px",
             }}
           >
-            {/* Left side - Title */}
             <h2
               style={{
                 color: theme.colors.primary,
@@ -171,7 +174,6 @@ function People() {
               Team Members ({filteredMembers.length})
             </h2>
 
-            {/* Right side - Controls */}
             <div
               style={{
                 display: "flex",
@@ -180,7 +182,7 @@ function People() {
                 flexWrap: "wrap",
               }}
             >
-              {/* ✅ Search Input with dynamic placeholder */}
+              {/* ✅ Dynamic search input */}
               <input
                 type="text"
                 placeholder={`Search by ${selectedFilter}`}
@@ -197,7 +199,6 @@ function People() {
                 }}
               />
 
-              {/* ✅ Filter Dropdown */}
               <FilterMenu
                 selectedFilter={selectedFilter}
                 onFilterChange={setSelectedFilter}
@@ -225,14 +226,7 @@ function People() {
           </div>
 
           {/* Table */}
-          <div
-            className="table-scroll-wrapper"
-            style={{
-              overflowX: "auto",
-              minWidth: 0,
-              width: "100%",
-            }}
-          >
+          <div style={{ overflowX: "auto", width: "100%" }}>
             <table
               width="100%"
               cellPadding="10"
@@ -309,9 +303,7 @@ function People() {
                       ? theme.colors.primary
                       : theme.colors.buttonBg,
                   color:
-                    currentPage === i + 1
-                      ? "#fff"
-                      : theme.colors.buttonText,
+                    currentPage === i + 1 ? "#fff" : theme.colors.buttonText,
                   borderRadius: "6px",
                   border: `1px solid ${theme.colors.buttonBorder}`,
                   padding: "6px 10px",
@@ -349,10 +341,11 @@ function People() {
               position: "relative",
               background: theme.colors.surface,
               boxShadow: theme.colors.cardShadow,
-              overflow: "hidden",
+              overflowY: "auto", // ✅ scrollable fix
               display: "flex",
               flexDirection: "column",
               transition: "all 0.25s ease",
+              maxHeight: "100vh", // ✅ prevent overflow
             }}
           >
             <button
@@ -419,7 +412,8 @@ function People() {
                 {selectedMember.contact || "1234567890"}
               </p>
               <p>
-                <strong>Email:</strong> {selectedMember.email}</p>
+                <strong>Email:</strong> {selectedMember.email}
+              </p>
               <p>
                 <strong>Work Email:</strong>{" "}
                 {selectedMember.workEmail || selectedMember.email}

@@ -4,17 +4,48 @@ import { useTheme } from "../context/ThemeContext";
 
 function TeamMember({ member, onDelete, onEdit, onSelect }) {
   const theme = useTheme();
+
+  // ✅ Team colors — polished and brand-like
   const teamColors = {
-    Design: '#FF5733',
-    Product: '#33A852',
-    Marketing: '#3357FF',
+    Design: "#F97316",      // warm orange
+    Product: "#16A34A",     // balanced green
+    Marketing: "#2563EB",   // vivid blue
+    Sales: "#EAB308",       // soft yellow-gold
+    HR: "#9333EA",          // elegant purple
+    Engineering: "#0EA5E9", // tech cyan-blue
+    Support: "#EF4444",     // confident red
   };
 
+
+  // ✅ Status badge styles
+  const getStatusStyle = (status) => {
+    const styles = {
+      Active: {
+        bg: theme.isDarkMode ? "rgba(46,204,113,0.12)" : "#e9f7ef",
+        color: "#27ae60",
+      },
+      Inactive: {
+        bg: theme.isDarkMode ? "rgba(231,76,60,0.12)" : "#fdecea",
+        color: "#c0392b",
+      },
+      "On Leave": {
+        bg: theme.isDarkMode ? "rgba(241,196,15,0.12)" : "#fff7e6",
+        color: "#f39c12",
+      },
+    };
+    return (
+      styles[status] || {
+        bg: theme.isDarkMode ? "rgba(255,255,255,0.05)" : "#f3f4f6",
+        color: theme.isDarkMode ? "#9ca3af" : "#374151",
+      }
+    );
+  };
+
+  const statusStyle = getStatusStyle(member.status);
+
   return (
-    <tr
-      style={{ cursor: "pointer" }}
-      onClick={() => onSelect(member)}
-    >
+    <tr style={{ cursor: "pointer" }} onClick={() => onSelect(member)}>
+      {/* ✅ Name */}
       <td data-label="Name">
         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
           <img
@@ -27,96 +58,86 @@ function TeamMember({ member, onDelete, onEdit, onSelect }) {
               objectFit: "cover",
             }}
           />
-          <div className="name-container" style={{ minWidth: 0, overflow: 'hidden' }}>
+          <div className="name-container" style={{ minWidth: 0, overflow: "hidden" }}>
             <strong className="member-name-text">{member.name}</strong>
-            <div className="member-username" style={{ color: theme.colors.secondaryText, fontSize: "0.9rem" }}>
+            <div
+              className="member-username"
+              style={{ color: theme.colors.secondaryText, fontSize: "0.9rem" }}
+            >
               @{member.username}
             </div>
           </div>
         </div>
       </td>
 
-  <td data-label="Status">
+      {/* ✅ Status */}
+      <td data-label="Status">
         <span
           style={{
-            backgroundColor: theme.isDarkMode ? "rgba(25,135,84,0.12)" : "#e9f7ef",
-            color: "#198754",
-            padding: "3px 10px",
+            display: "inline-block",
+            padding: "4px 10px",
             borderRadius: "20px",
             fontSize: "0.85rem",
+            fontWeight: 500,
+            background: statusStyle.bg,
+            color: statusStyle.color,
+            textTransform: "capitalize",
           }}
         >
           {member.status}
         </span>
       </td>
 
+      {/* ✅ Role */}
       <td data-label="Role">
-        <span className="role-text" title={member.role}>{member.role}</span>
-      </td>
-      <td data-label="Email">
-        <span className="email-text" title={member.email}>{member.email}</span>
+        <span className="role-text" title={member.role}>
+          {member.role}
+        </span>
       </td>
 
+      {/* ✅ Email */}
+      <td data-label="Email">
+        <span className="email-text" title={member.email}>
+          {member.email}
+        </span>
+      </td>
+
+      {/* ✅ Teams (colorful badges) */}
+      {/* Teams (compact badges) */}
       <td data-teams data-label="Teams">
-        <div className="team-badges-container">
+        <div className="team-badges-container" style={{ display: "flex", flexWrap: "wrap", gap: "4px" }}>
           {member.teams && member.teams.length > 0 ? (
             (() => {
               const visible = member.teams.slice(0, 2);
               const extra = member.teams.length - visible.length;
+
               return (
                 <>
-            {visible.map((team, index) => {
-                      const borderColor = teamColors[team] || (theme.isDarkMode ? '#ffffff' : '#000000');
-                      // Inline capsule style as a robust fallback to ensure capsule look
-                      const inlineBadge = {
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        padding: '6px 10px',
-                        marginRight: 8,
-                        marginBottom: 8,
-                        borderRadius: 999,
-                        border: `1px solid ${borderColor}`,
-                        background: theme.isDarkMode ? 'rgba(255,255,255,0.04)' : 'transparent',
-                        color: theme.isDarkMode ? '#fff' : '#111827',
-                        fontSize: '0.78rem',
-                        fontWeight: 500,
-                        whiteSpace: 'nowrap',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        maxWidth: '160px',
-                      };
+                  {visible.map((team, index) => {
+                    const bgColor = teamColors[team] || "#ccc";
 
-                      return (
-                        <span
-                          key={index}
-                          className="team-badge"
-                          data-team={team}
-                          title={team}
-                          style={inlineBadge}
-                        >
-                          {team}
-                        </span>
-                      );
-                    })}
+                    return (
+                      <span
+                        key={index}
+                        title={team}
+                        style={{
+                          display: "inline-block",
+                          padding: "2px 6px",
+                          borderRadius: "999px",
+                          backgroundColor: bgColor,
+                          color: "#fff",
+                          fontSize: "0.65rem",
+                          fontWeight: 500,
+                          textTransform: "capitalize",
+                        }}
+                      >
+                        {team}
+                      </span>
+                    );
+                  })}
+
                   {extra > 0 && (
-                    <span
-                      className="team-badge team-more"
-                      title={member.teams.slice(2).join(', ')}
-                      style={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        padding: '6px 10px',
-                        marginRight: 8,
-                        marginBottom: 8,
-                        borderRadius: 999,
-                        border: `1px dashed ${theme.isDarkMode ? '#ffffff' : '#9ca3af'}`,
-                        background: theme.isDarkMode ? 'rgba(255,255,255,0.04)' : '#f3f4f6',
-                        color: theme.isDarkMode ? '#fff' : '#374151',
-                        fontSize: '0.72rem',
-                        fontWeight: 500,
-                        whiteSpace: 'nowrap',
-                      }}
-                    >
+                    <span title={member.teams.slice(2).join(", ")} style={{ fontSize: "0.65rem" }}>
                       +{extra}
                     </span>
                   )}
@@ -127,14 +148,16 @@ function TeamMember({ member, onDelete, onEdit, onSelect }) {
         </div>
       </td>
 
-  <td data-label="Actions" onClick={(e) => e.stopPropagation()}>
+
+      {/* ✅ Actions */}
+      <td data-label="Actions" onClick={(e) => e.stopPropagation()}>
         <button
           onClick={() => onDelete(member.id)}
           style={{
             border: "none",
             background: "transparent",
             cursor: "pointer",
-            color: theme.isDarkMode ? "#ff8a80" : "red",
+            color: theme.isDarkMode ? "#f81500ff" : "red",
             marginRight: "10px",
           }}
         >
@@ -157,4 +180,3 @@ function TeamMember({ member, onDelete, onEdit, onSelect }) {
 }
 
 export default TeamMember;
-
